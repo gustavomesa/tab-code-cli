@@ -1,0 +1,11 @@
+# Dependencias
+node_modules/
+
+# Archivos de sistema
+.DS_Store
+.env
+.vscode/
+
+# Logs y archivos de compilación
+dist/
+*.log

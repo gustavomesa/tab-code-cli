@@ -1,21 +1,32 @@
-// src/helpers/catalogFetcher.js
 const BASE_URL =
-  "https://raw.githubusercontent.com/TU_USUARIO/tab-code-cli/main/catalog";
+  "https://raw.githubusercontent.com/gustavomesa/tab-code-cli/main/catalog";
 
 export async function getRemoteCatalog(type) {
+  const url = `${BASE_URL}/${type}.json`;
+
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000); // Timeout de 3 segundos
+    const response = await fetch(url);
 
-    const response = await fetch(`${BASE_URL}/${type}.json`, {
-      signal: controller.signal,
-    });
+    if (!response.ok) {
+      console.log(
+        `⚠️  No se pudo acceder al catálogo de ${type} (Status: ${response.status})`,
+      );
+      return null;
+    }
 
-    clearTimeout(timeoutId);
+    const data = await response.json();
 
-    if (!response.ok) return null;
-    return await response.json();
+    // Verificación: ¿Es un array y tiene elementos?
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log(
+        `\n📢 AVISO: El catálogo de ${type} no tiene frameworks disponibles por el momento.`,
+      );
+      return null;
+    }
+
+    return data;
   } catch (error) {
-    return null; // Si falla, devolveremos null para usar el respaldo local
+    console.log(`\n❌ Error técnico al cargar ${type}: ${error.message}`);
+    return null;
   }
 }
