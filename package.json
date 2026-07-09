@@ -1,0 +1,49 @@
+{
+  "name": "tab-code-cli",
+  "version": "1.0.0",
+  "description": "Herramienta CLI para andamiaje y automatización de proyectos modulares por Tab&Code",
+  "author": "Gustavo Mesa Casas <gustavoamesa17@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "tab-code": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test --test-reporter=spec tests/**/*.test.js"
+  },
+  "keywords": [
+    "cli",
+    "scaffolding",
+    "automation",
+    "clean-architecture",
+    "vite",
+    "react",
+    "fastapi",
+    "flask",
+    "django"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^10.14.0",
+      "onFail": "download"
+    }
+  },
+  "files": [
+    "index.js",
+    "src/"
+  ],
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "commander": "^15.0.0",
+    "execa": "^9.6.1",
+    "fs-extra": "^11.3.6",
+    "picocolors": "^1.1.1"
+  }
+}
