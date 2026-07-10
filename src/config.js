@@ -4,7 +4,7 @@
 export const CONFIG = {
   // URLs de donde el CLI buscará los catálogos (GitHub Raw)
   CATALOG_BASE_URL:
-    "https://raw.githubusercontent.com/gustavomesa/tab-code-cli/main/catalog",
+    "https://github.com/gustavomesa/tab-code-cli/tree/main/src/catalog",
 
   // Puertos por defecto asignados a cada entorno de desarrollo
   PUERTOS: {
