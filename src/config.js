@@ -1,18 +1,37 @@
 /**
  * 🧠 CEREBRO CENTRAL DE CONFIGURACIÓN - TAB&CODE CLI
- *
- * Este archivo centraliza todos los datos estáticos del CLI.
- * Si deseas añadir nuevos frameworks, cambiar puertos o actualizar enlaces,
- * ESTE es el único lugar donde debes tocar.
  */
 export const CONFIG = {
+  // URLs de donde el CLI buscará los catálogos (GitHub Raw)
+  CATALOG_BASE_URL:
+    "https://raw.githubusercontent.com/gustavomesa/tab-code-cli/main/catalog",
+
   // Puertos por defecto asignados a cada entorno de desarrollo
   PUERTOS: {
     FRONTEND: "5173",
     BACKEND: "8000",
   },
 
-  // Enlaces oficiales utilizados por el Guardián en caso de instalaciones ausentes
+  // Requisitos del sistema que el Guardián verificará al arrancar
+  REQUISITOS_SISTEMA: [
+    {
+      name: "git",
+      cmd: "git --version",
+      link: "https://git-scm.com/downloads",
+    },
+    {
+      name: "pnpm",
+      cmd: "pnpm --version",
+      link: "https://pnpm.io/installation",
+    },
+    {
+      name: "python",
+      cmd: "python --version",
+      link: "https://www.python.org/downloads/",
+    },
+  ],
+
+  // Enlaces oficiales en caso de instalaciones ausentes
   ENLACES_INSTALACION: {
     git: "https://git-scm.com/downloads",
     pnpm: "https://pnpm.io/installation",
@@ -20,17 +39,16 @@ export const CONFIG = {
     docker: "https://docs.docker.com/get-docker/",
   },
 
-  // Archivos clave de configuración que el CLI generará automáticamente
+  // Archivos clave de configuración
   ARCHIVOS: {
     CONFIG_NAME: "tabcode.config.json",
+    FRONT_CATALOG: "front.json",
+    BACK_CATALOG: "back.json",
   },
 
   // =========================================================================
   // 🚀 CATÁLOGO DINÁMICO DE TEMPLATES (MERCADO MODULAR)
   // =========================================================================
-  // Cada objeto representa una opción en el menú interactivo de la terminal.
-  // Si en el futuro quieres añadir un framework (ej. Next.js o NestJS),
-  // simplemente agrega un nuevo objeto al array correspondiente aquí abajo.
 
   OPCIONES_FRONT: [
     {

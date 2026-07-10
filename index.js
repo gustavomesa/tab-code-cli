@@ -1,36 +1,56 @@
-import { select, intro, outro, spinner } from "@clack/prompts";
-import { getRemoteCatalog } from "./src/helpers/catalogFetcher.js";
+#!/usr/bin/env node
+import { intro, outro } from "@clack/prompts";
 import pc from "picocolors";
+import { checkSystemRequirements } from "./src/helpers/systemChecker.js";
+
+/**
+ * ¿Qué hace este código?:
+ * Es el orquestador maestro del CLI. Sigue un flujo secuencial estricto:
+ * 1. Diagnóstico del sistema (El Guardián).
+ * 2. Recopilación de deseos del usuario (Prompts).
+ * 3. Ejecución de la construcción (Constructor).
+ */
 
 async function run() {
-  intro(pc.cyan("🚀 Iniciando Tab-Code-CLI..."));
+  // 1. Bienvenida inicial
+  intro(pc.bgCyan(pc.black(" 🚀 TAB&CODE FACTORY ")));
 
-  const s = spinner();
-  s.start("Verificando catálogos...");
+  // 2. Verificación del entorno
+  // Si el Guardián encuentra fallos, detiene la ejecución inmediatamente
+  const systemStatus = await checkSystemRequirements();
 
-  const frontData = await getRemoteCatalog("front");
-  const backData = await getRemoteCatalog("back");
-
-  s.stop("Verificación finalizada.");
-
-  // Si alguno de los dos falla, el CLI se detiene con un mensaje claro
-  if (!frontData || !backData) {
-    outro(pc.red("❌ El proceso no puede continuar porque faltan catálogos."));
+  if (!systemStatus.success) {
+    outro(
+      pc.red(
+        "❌ El proceso ha sido cancelado por falta de dependencias obligatorias.",
+      ),
+    );
     process.exit(1);
   }
 
-  // Si llegamos aquí, es que hay datos. Mostramos los selects:
-  const frontend = await select({
-    message: "¿Qué tecnología frontend quieres usar?",
-    options: frontData.map((item) => ({ label: item.name, value: item.value })),
-  });
+  // 3. Cargamos los módulos pesados solo cuando sabemos que todo está bien.
+  // Esto evita errores de "Módulo no encontrado" durante el diagnóstico.
+  const { askProjectQuestions } = await import("./src/helpers/prompts.js");
+  const { buildProject } = await import("./src/installers/projectBuilder.js");
 
-  const backend = await select({
-    message: "¿Qué tecnología backend quieres usar?",
-    options: backData.map((item) => ({ label: item.name, value: item.value })),
-  });
+  // 4. Interacción con el usuario
+  const answers = await askProjectQuestions();
 
-  outro(pc.green(`✅ Has seleccionado: ${frontend} y ${backend}`));
+  // 5. Salida temprana si el usuario decide abortar
+  if (answers.tipoProyecto === "salir") {
+    outro("👋 ¡Hasta la próxima!");
+    process.exit(0);
+  }
+
+  // 6. Construcción física del proyecto
+  // Pasamos 'answers' (lo que quiere) y 'systemStatus.features' (lo que tiene instalado)
+  await buildProject(answers, systemStatus.features);
+
+  outro(pc.green("✅ ¡Proyecto generado exitosamente!"));
 }
 
-run();
+// Ejecución con protección global de errores
+run().catch((err) => {
+  console.error(pc.red("❌ Error crítico durante la ejecución:"), err);
+  process.exit(1);
+});
