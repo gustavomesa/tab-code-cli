@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "title": "Catálogo Backend",
+    "message": "⚙️ Te has conectado al catálogo de Backend"
+  },
+  "options": [
+    { "value": "fastapi", "label": "FastAPI", "hint": "Backend con Python" }
+  ]
+}

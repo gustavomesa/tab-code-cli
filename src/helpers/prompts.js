@@ -77,14 +77,39 @@ export async function askProjectQuestions() {
         if (framework === "back_menu") step = "tipo";
         else {
           answers.framework = framework;
-          step = "confirmar";
+          step = "opciones";
         }
+        break;
+
+      case "opciones":
+        const servicios = await p.multiselect({
+          message: "¿Deseas inicializar servicios adicionales?",
+          options: [
+            {
+              value: "git",
+              label: "Inicializar Git",
+              hint: "Crea el repositorio local.",
+            },
+            {
+              value: "docker",
+              label: "Añadir Docker",
+              hint: "Prepara el entorno contenedorizado.",
+            },
+          ],
+          required: false,
+        });
+        if (p.isCancel(servicios)) process.exit(0);
+        answers.servicios = servicios;
+        step = "confirmar";
         break;
 
       case "confirmar":
         p.log.info(
           picocolors.cyan("Resumen: ") +
-            `${answers.nombreProyecto} / ${answers.tipoProyecto} / ${answers.framework}`,
+            `${answers.nombreProyecto} / ${answers.tipoProyecto} / ${answers.framework}` +
+            (answers.servicios?.length > 0
+              ? ` / +${answers.servicios.join(", ")}`
+              : ""),
         );
         const ok = await p.confirm({ message: "¿Todo correcto?" });
         if (p.isCancel(ok)) process.exit(0);

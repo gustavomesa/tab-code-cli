@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "title": "Catálogo Frontend",
+    "message": "🚀 Te has conectado al catálogo de Frontend"
+  },
+  "options": [
+    { "value": "react", "label": "React", "hint": "Frontend con React" }
+  ]
+}
