@@ -2,7 +2,6 @@
  * 🧠 CEREBRO CENTRAL DE CONFIGURACIÓN - TAB&CODE CLI
  */
 export const CONFIG = {
-  // URLs de donde el CLI buscará los catálogos (GitHub Raw)
   CATALOG_BASE_URL:
     "https://github.com/gustavomesa/tab-code-cli/tree/main/src/catalog",
 
@@ -12,7 +11,7 @@ export const CONFIG = {
     BACKEND: "8000",
   },
 
-  // Requisitos del sistema que el Guardián verificará al arrancar
+  // Requisitos del sistema que el Guardián verificarán al arrancar
   REQUISITOS_SISTEMA: [
     {
       name: "git",
@@ -47,9 +46,8 @@ export const CONFIG = {
   },
 
   // =========================================================================
-  // 🚀 CATÁLOGO DINÁMICO DE TEMPLATES (MERCADO MODULAR)
+  // 🚀 FALLBACKS LOCALES (Por si falla la conexión remota)
   // =========================================================================
-
   OPCIONES_FRONT: [
     {
       value: "react-vite",
