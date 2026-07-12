@@ -2,8 +2,13 @@
  * 🧠 CEREBRO CENTRAL DE CONFIGURACIÓN - TAB&CODE CLI
  */
 export const CONFIG = {
-  CATALOG_BASE_URL:
-    "https://github.com/gustavomesa/tab-code-cli/tree/main/src/catalog",
+  // Configuración de rutas absolutas para cada catálogo remoto
+  CATALOGOS_REMOTOS: {
+    frontend:
+      "https://raw.githubusercontent.com/gustavomesa/tab-code-cli/main/src/catalog/frontend.json",
+    backend:
+      "https://raw.githubusercontent.com/gustavomesa/tab-code-cli/main/src/catalog/backend.json",
+  },
 
   // Puertos por defecto asignados a cada entorno de desarrollo
   PUERTOS: {
@@ -11,7 +16,7 @@ export const CONFIG = {
     BACKEND: "8000",
   },
 
-  // Requisitos del sistema que el Guardián verificarán al arrancar
+  // Requisitos del sistema que el Guardián verificará al arrancar
   REQUISITOS_SISTEMA: [
     {
       name: "git",
@@ -41,13 +46,12 @@ export const CONFIG = {
   // Archivos clave de configuración
   ARCHIVOS: {
     CONFIG_NAME: "tabcode.config.json",
-    FRONT_CATALOG: "front.json",
-    BACK_CATALOG: "back.json",
   },
 
   // =========================================================================
-  // 🚀 FALLBACKS LOCALES (Por si falla la conexión remota)
+  // 🚀 CATÁLOGO DINÁMICO DE TEMPLATES (FALLBACKS LOCALES)
   // =========================================================================
+
   OPCIONES_FRONT: [
     {
       value: "react-vite",

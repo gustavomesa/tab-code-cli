@@ -3,21 +3,23 @@ import { CONFIG } from "../config.js";
 
 /**
  * --- CATÁLOGO REMOTO ---
- * Intenta cargar las opciones desde GitHub.
- * Si tiene éxito, muestra el mensaje definido en el JSON.
- * Si falla, avisa y utiliza las opciones locales de respaldo.
+ * Obtiene las opciones de configuración directamente desde su URL absoluta.
  */
 export async function getRemoteCatalog(type) {
-  // DIRECTO: Si type es 'frontend', buscará 'frontend.json'. Sin parches intermedios.
-  const url = `${CONFIG.CATALOG_BASE_URL}/${type}.json`;
+  // Extrae la URL directa mapeada en el config.js ('frontend' o 'backend')
+  const url = CONFIG.CATALOGOS_REMOTOS[type];
 
-  // Añade un timeout de 4 segundos para que el CLI no se quede colgado si el internet falla
+  // Si no existe una URL mapeada para ese tipo, abortamos inmediatamente usando el fallback
+  if (!url) {
+    return null;
+  }
+
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000);
+  const timeoutId = setTimeout(() => controller.abort(), 6000);
 
   try {
     const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId); // Limpia el temporizador si responde a tiempo
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Archivo no encontrado (Status: ${response.status})`);
@@ -25,19 +27,20 @@ export async function getRemoteCatalog(type) {
 
     const data = await response.json();
 
-    // Muestra el mensaje dinámico que viene dentro del archivo JSON remoto
     if (data.metadata && data.metadata.message) {
       console.log(picocolors.green(`\n📬 ${data.metadata.message}`));
     }
 
-    // Retorna las opciones contenidas en el JSON si vienen en el formato correcto
     return Array.isArray(data.options) && data.options.length > 0
       ? data.options
       : null;
   } catch (error) {
     clearTimeout(timeoutId);
 
-    // Muestra la alerta informativa estilizada avisando que se usará el respaldo local
+    // Rastreo de diagnóstico detallado por si acaso
+    console.log(picocolors.red(`\n🔍 Fallo en consulta -> URL: ${url}`));
+    console.log(picocolors.red(`   Error: ${error.message || error}`));
+
     console.log(
       "\n" +
         picocolors.yellow("⚠️  Nota: ") +
